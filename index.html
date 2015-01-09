@@ -11,7 +11,8 @@
   <div class="large-11 columns" style="margin-left:-15px;margin-top:15px;">
     <h1 style="display:inline">Legislative Committee Maps</h1>
     <span class="rwd-line">
-    <a href="#" style="margin-right:10px;margin-left:12px;" class="button committeeButton" data-dropdown="tinyDropLower" data-options="is_hover:true">Senate Committees &raquo;</a>
+    <a href="#" style="margin-right:10px;margin-left:12px;" class="button committeeButton" data-dropdown="tinyDropLower"
+       data-options="is_hover:true">House Committees &raquo;</a>
     <ul id="tinyDropLower" class="f-dropdown" data-dropdown-content style="position: absolute; top: 230px; left: -99999px;">
     </ul>
     <a href="#" class="button committeeButton" data-dropdown="tinyDropUpper" data-options="is_hover:true">Senate
@@ -30,7 +31,8 @@
 <script src="js/script.js"></script>
 <script>
   $(document).foundation();
-  populateDropDown("md");
+  state = getQueryVariable("state")
+  populateDropDown(state);
 </script>
 </body>
 </html>

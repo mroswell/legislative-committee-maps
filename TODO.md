@@ -1,4 +1,4 @@
-- use url parameter to determine state
+- DONE. use url parameter to determine state
 - research the various state names, and use state url parameter and json file to determine the names for "House and
 Senate";
 - alphabetize committees within dropdown
