@@ -10,24 +10,28 @@ var populateDropDown= function(state) {
       committees = _.reject(committeeList, 'subcommittee');
       upperCommittees = _.where(committees, {chamber: "upper"});
       lowerCommittees = _.where(committees,{chamber:"lower"});
-//      $('pre').html(JSON.stringify(upperCommittees, null, 2));
-//      for (committeeObj in upperCommittees){
-//        console.log(upperCommittees[committeeObj].committee, " - ", upperCommittees[committeeObj].id)
-//      }
-      var upperOutput = "";
-        $.each(upperCommittees, function(key, val) {
-        upperOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
+      sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
+      sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
+
+      $('pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
+//        $('pre').html(upperCommitteeNameAndID);
+      for (committeeObj in sortedUpperCommittees){
+        console.log(upperCommittees[committeeObj].committee, " - ", upperCommittees[committeeObj].id)
+      }
+      var sortedUpperOutput = "";
+        $.each(sortedUpperCommittees, function(key, val) {
+        sortedUpperOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
       });
-      var lowerOutput = "";
-        $.each(lowerCommittees, function(key, val) {
-        lowerOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
+      var sortedLowerOutput = "";
+        $.each(sortedLowerCommittees, function(key, val) {
+        sortedLowerOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
       });
-      $('ul#tinyDropUpper').prepend(upperOutput);
-      $('ul#tinyDropLower').prepend(lowerOutput);
+
+      $('ul#tinyDropUpper').prepend(sortedUpperOutput);
+      $('ul#tinyDropLower').prepend(sortedLowerOutput);
 
     })
 };
-
 
 var drawMap= function (committee) {
   console.log(committee);
