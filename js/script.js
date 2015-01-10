@@ -13,16 +13,16 @@ var populateDropDown= function(state) {
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
 
-      $('#update pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
-      $('#update2 pre').html(JSON.stringify(sortedUpperCommittees, null,2));
+      $('#update-left pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
+      $('#update-right pre').html(JSON.stringify(sortedUpperCommittees, null,2));
 //        $('pre').html(upperCommitteeNameAndID);
       var sortedUpperOutput = "";
         $.each(sortedUpperCommittees, function(key, val) {
-        sortedUpperOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
+        sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + val.id +'">' + val.committee + '</a></li>';
       });
       var sortedLowerOutput = "";
         $.each(sortedLowerCommittees, function(key, val) {
-        sortedLowerOutput += '<li><a href="#"  data-committee="' + val.id +'">' + val.committee + '</a></li>';
+        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id +'">' + val.committee + '</a></li>';
       });
 
       $('ul#tinyDropUpper').prepend(sortedUpperOutput);
@@ -39,24 +39,27 @@ var drawMap= function (committee) {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   }).done(function(committee){
+      console.log('Now in drawMap function')
       console.log("Committee", committee);
       console.log(committee.members);
       leg_id_array = _.pluck(committee.members, 'leg_id');
       console.log(leg_id_array);
-      $('#update').html(committee);
+//      $('#update').html(committee);
     });
 };
 
+$("[data-cmte-id]").on("click", function(e) {
+  e.preventDefault();
+  console.log($(this));
+//  var committee_id = $(this).attr("data-cmte-id");
+  var committee_id = $(this).data("cmte-id");
+  console.log('data-committee', committee_id);
+  $(this).parent().parent()
+    .css('left', '-99999px')
+    .removeClass("open");
 
-//$("[data-committee]").on("click", function(e) {
-//  e.preventDefault();
-//  //console.log($(this));
-//  var committee = $(this).data("committee");
-////  console.log ('committee', committee);
-//  $(this).parent().parent()
-//    .css('left', '-99999px')
-//    .removeClass("open");
-//  drawMap(committee);
+  drawMap(committee_id);
+});
 
 // http://css-tricks.com/snippets/javascript/get-url-variables/
 function getQueryVariable(variable)
