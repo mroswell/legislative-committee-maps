@@ -48,7 +48,7 @@ var drawMap= function (committee) {
     });
 };
 
-$("[data-cmte-id]").on("click", function(e) {
+$(document.body).on("click", "[data-cmte-id]",function(e) {
   e.preventDefault();
   console.log($(this));
 //  var committee_id = $(this).attr("data-cmte-id");
@@ -57,9 +57,9 @@ $("[data-cmte-id]").on("click", function(e) {
   $(this).parent().parent()
     .css('left', '-99999px')
     .removeClass("open");
-
   drawMap(committee_id);
 });
+
 
 // http://css-tricks.com/snippets/javascript/get-url-variables/
 function getQueryVariable(variable)
