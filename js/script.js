@@ -13,7 +13,8 @@ var populateDropDown= function(state) {
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
 
-      $('pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
+      $('#update pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
+      $('#update2 pre').html(JSON.stringify(sortedUpperCommittees, null,2));
 //        $('pre').html(upperCommitteeNameAndID);
       for (committeeObj in sortedUpperCommittees){
         console.log(upperCommittees[committeeObj].committee, " - ", upperCommittees[committeeObj].id)
