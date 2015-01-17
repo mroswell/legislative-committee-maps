@@ -54,6 +54,7 @@ var drawMap= function (committee) {
 };
 
 // Get legislator detail
+// TODO: Optimize this code
 var addLegislators = function(leg_id, committee) {
 //  for (i in leg_id) {
 //    $('#update1-left pre').append(leg_id);
