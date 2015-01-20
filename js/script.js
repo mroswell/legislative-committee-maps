@@ -54,8 +54,7 @@ var addLegislators = function(committee) {
   $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
   committee.members.forEach(function(member) {
-//  for (i in committee.members) {
- //   $('#update1-left pre').append(JSON.stringify(committee.members[i], null, 2)) //[i].leg_id);
+
     var memberListRequest = $.ajax({
     dataType: "json",
     url: "http://openstates.org/api/v1/legislators/" + member.leg_id,//committee.members[i].leg_id,
@@ -73,21 +72,14 @@ var addLegislators = function(committee) {
         }
       //     }
       });
-//    console.log ("THERE", committee);
+
   });
-//  drawMap(committee);
-//  console.log("ADDLEG", committee);
-//
-//  $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+
 
 }
-  //  }
-//}
-//    };
+
 $(document.body).on("click", "[data-cmte-id]",function(e) {
   e.preventDefault();
-//  console.log($(this));
-//  var committee_id = $(this).attr("data-cmte-id");
   var committee_id = $(this).data("cmte-id");
   console.log('data-committee', committee_id);
   $(this).parent().parent()
