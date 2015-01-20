@@ -1,4 +1,6 @@
-// Get names of the committies
+//var committee ={};
+
+// Get names of the committees
 var populateDropDown= function(state) {
   var committeeListRequest = $.ajax({
     dataType: "json",
@@ -14,8 +16,8 @@ var populateDropDown= function(state) {
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
 
-      $('#update-left pre').html(JSON.stringify( sortedLowerCommittees, null, 2));
-      $('#update-right pre').html(JSON.stringify(sortedUpperCommittees, null,2));
+ //     $('#update-left pre').html(JSON.stringify(sortedLowerCommittees, null, 2));
+ //     $('#update-right pre').html(JSON.stringify(sortedUpperCommittees, null,2));
 //        $('pre').html(upperCommitteeNameAndID);
       var sortedUpperOutput = "";
         $.each(sortedUpperCommittees, function(key, val) {
@@ -32,68 +34,71 @@ var populateDropDown= function(state) {
 };
 
 // Get committee detail
-var drawMap= function (committee) {
-  console.log(committee);
+var getCommitteeDetail= function (committee_id) {
+  console.log(committee_id);
   var committeeRequest = $.ajax({
     dataType: "json",
-    url: "http://openstates.org/api/v1/committees/" + committee,
+    url: "http://openstates.org/api/v1/committees/" + committee_id,
     data: {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   }).done(function(committee){
-      console.log('Now in drawMap function')
-      console.log("Committee", committee);
-      console.log(committee.members);
       leg_id_array = _.pluck(committee.members, 'leg_id');
-      console.log(leg_id_array);
-//      $('#update').html(committee);
-      for (i in leg_id_array) {
-        addLegislators(leg_id_array[i], committee);
-      }
+addLegislators(committee)
     });
 };
 
-// Get legislator detail
+// append legislator detail to committee
 // TODO: Optimize this code
-var addLegislators = function(leg_id, committee) {
-//  for (i in leg_id) {
-//    $('#update1-left pre').append(leg_id);
-  var memberListRequest = $.ajax({
+var addLegislators = function(committee) {
+  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
+  var counter = 0;
+  committee.members.forEach(function(member) {
+//  for (i in committee.members) {
+ //   $('#update1-left pre').append(JSON.stringify(committee.members[i], null, 2)) //[i].leg_id);
+    var memberListRequest = $.ajax({
     dataType: "json",
-    url: "http://openstates.org/api/v1/legislators/" + leg_id,
+    url: "http://openstates.org/api/v1/legislators/" + member.leg_id,//committee.members[i].leg_id,
     data: {
 //      state: state,
-      active: true,
+//      active: true,
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   }).done(function(memberDetail) {
-      console.log("member detail", memberDetail, committee.members);
-      for (i in committee.members) {
-        if (committee.members[i].leg_id === leg_id ) {
-        console.log (leg_id, committee.members[i].name)
-        committee.members[i].detail = memberDetail;
-        console.log(committee.members);
+        member.detail = memberDetail;
+        counter++;
+        if (counter === committee.members.length) {
+          console.log("ADDLEG", committee);
+          $('#update1-left pre').append(JSON.stringify(committee, null, 2));
         }
-      }
-      $('#update1-left pre').html(JSON.stringify(committee.members, null, 2));
-    })
-    };
+      //     }
+      });
+//    console.log ("THERE", committee);
+  });
+//  drawMap(committee);
+//  console.log("ADDLEG", committee);
+//
+//  $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+
+}
+  //  }
+//}
+//    };
 $(document.body).on("click", "[data-cmte-id]",function(e) {
   e.preventDefault();
-  console.log($(this));
+//  console.log($(this));
 //  var committee_id = $(this).attr("data-cmte-id");
   var committee_id = $(this).data("cmte-id");
   console.log('data-committee', committee_id);
   $(this).parent().parent()
     .css('left', '-99999px')
     .removeClass("open");
-  drawMap(committee_id);
+  getCommitteeDetail(committee_id);
 });
 
 
 // http://css-tricks.com/snippets/javascript/get-url-variables/
-function getQueryVariable(variable)
-{
+function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
   for (var i=0;i<vars.length;i++) {
