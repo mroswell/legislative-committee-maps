@@ -5,6 +5,18 @@
   <title>Legislative Committee Maps</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css"/>
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+  <script id="committee-member-template" type="text/x-handlebars-template">
+    <div class="entry">
+      TEMPLATE
+      <!--<a href="{{committee_results.url}}" target="_blank"><h6>{{ committee_name}} <i class="fa fa-link"></i></h6></a>-->
+      <!--<ul>-->
+        <!--{{#each sorted_members}}-->
+        <!--<li><a href="javascript:void(0);" data-member-id="{{bioguide_id}}">-->
+          <!--{{first_name}} {{last_name}} ({{party}}), {{stateAbbreviation}}{{#if district}}-{{district}}{{/if}}{{#if title}}, {{title}}{{/if}}</a></li>{{/each}}-->
+      <!--</ul>-->
+    </div>
+  </script>
 </head>
 <body>
 <div class="row">
@@ -23,6 +35,41 @@
     </span>
   </div>
 </div>
+
+<!-- Main Page Content and Sidebar -->
+<div class="row">
+
+  <!-- Main Content -->
+  <div class="large-9 columns" role="content">
+
+    <section>
+      <!--<div class="large-12 columns" style="margin-left:-30px;">-->
+
+      <!--</div>-->
+      <div class="row">
+        <div class="large-12 columns" id="map">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- End Main Content -->
+
+
+
+  <aside class="large-3 columns" >
+    <div class="panel" id="member-detail">
+      <p>Select a committee, then click a committee member for detail.</p>
+    </div>
+    <div id="committee-list">
+    </div>
+  </aside>
+
+  <!-- End Sidebar -->
+</div>
+
+<!-- End Main Content and Sidebar -->
+
 <div class="row">
 <div id="update-left" class="small-6 columns"><pre></pre></div>
 <div id="update-right" class="small-6 columns"><pre></pre></div>
@@ -38,8 +85,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 <script src="js/script.js"></script>
 <script>
+//  var mapp = $.ajax("maps/maryland-legislative-districts-single.geojson");
+//var mapp = $.getJSON("maps/maryland-legislative-districts-single.geojson").done(function(stateLegMap) {
+//  console.log(stateLegMap.features[0].properties.name); //here's your response
+//});
+</script>
+<script>
   $(document).foundation();
-  state = getQueryVariable("state")
+  state = getQueryVariable("state");
+  console.log(state);
   populateDropDown(state);
 </script>
 </body>

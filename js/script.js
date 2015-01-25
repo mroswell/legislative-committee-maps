@@ -49,7 +49,6 @@ addLegislators(committee)
 };
 
 // append legislator detail to committee
-// TODO: Optimize this code
 var addLegislators = function(committee) {
   $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
@@ -57,7 +56,7 @@ var addLegislators = function(committee) {
 
     var memberListRequest = $.ajax({
     dataType: "json",
-    url: "http://openstates.org/api/v1/legislators/" + member.leg_id,//committee.members[i].leg_id,
+    url: "http://openstates.org/api/v1/legislators/" + member.leg_id, //committee.members[i].leg_id,
     data: {
 //      state: state,
 //      active: true,
@@ -69,13 +68,37 @@ var addLegislators = function(committee) {
         if (counter === committee.members.length) {
           console.log("ADDLEG", committee);
           $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+          listMembers(committee);
+          console.log("AAA", committee);
+
         }
       //     }
       });
 
   });
 
+};
 
+function listMembersPLACEHOLDER(committee) {
+  console.log("YOU ARE HERE");
+}
+function listMembers(committee) {
+  console.log("listMembers: ", committee);
+
+  var context = { cmte: committee,
+//  committee_abbrev: committee.results[0].committee_id,
+//  committee_name: committee.results[0].name,
+//  committee_results: committee.results[0],
+//  committee_members: committee.results[0].members[0].legislator,
+//  sorted_members: sortedMemberNames,
+//  first_name: committee.results[0].members[0].legislator.first_name,
+//  title: committee.results[0].members[0].title
+    committeeHandle: "Yay."
+  };
+
+  var html = app.memberTemplate(context);
+  $('#committee-list')
+    .html(html);
 }
 
 $(document.body).on("click", "[data-cmte-id]",function(e) {
@@ -99,3 +122,20 @@ function getQueryVariable(variable) {
   }
   return(false);
 }
+
+
+var app = {};
+console.log("app", app);
+
+function init() {
+
+  console.log("init");
+  var sourceMembers = $("#committee-member-template")
+    .html();
+  app.memberTemplate = Handlebars.compile(sourceMembers);
+  console.log(app);
+
+
+}
+
+init();
