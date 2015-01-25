@@ -8,13 +8,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
   <script id="committee-member-template" type="text/x-handlebars-template">
     <div class="entry">
-      TEMPLATE
-      <!--<a href="{{committee_results.url}}" target="_blank"><h6>{{ committee_name}} <i class="fa fa-link"></i></h6></a>-->
-      <!--<ul>-->
-        <!--{{#each sorted_members}}-->
-        <!--<li><a href="javascript:void(0);" data-member-id="{{bioguide_id}}">-->
-          <!--{{first_name}} {{last_name}} ({{party}}), {{stateAbbreviation}}{{#if district}}-{{district}}{{/if}}{{#if title}}, {{title}}{{/if}}</a></li>{{/each}}-->
-      <!--</ul>-->
+      <a href="{{cmte.url}}" target="_blank"><h6>{{ cmte.committee}} <i class="fa fa-link"></i></h6></a>
+      <ul>
+        {{#each cmte.members}}
+        <li><a href="javascript:void(0);" data-member-id="{{leg_id}}">
+          {{detail.full_name}} ({{detail.party}}){{#if detail.district}}-{{detail.district}}{{/if}}{{#if role}},
+          {{role}}{{/if}}</a></li>
+        {{/each}}
+      </ul>
     </div>
   </script>
 </head>

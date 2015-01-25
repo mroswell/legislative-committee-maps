@@ -1,3 +1,7 @@
+- only display active members
+- Determine why party is empty
+- sort members for memberList, so that chairs are at the top.
+- Modify SC "Vice-chair" to be "Vice-Chair"
 - DONE. use url parameter to determine state
 - research the various state names, and use state url parameter and json file to determine the names for "House and
 Senate";
@@ -9,4 +13,5 @@ Senate";
 - figure out topojson?
 
 Farther along
-- add subcomittees and permalinks
+- add subcommittees and permalinks
+- Work with OpenStates -- maybe organize a hackathon -- to add social media data for legislators

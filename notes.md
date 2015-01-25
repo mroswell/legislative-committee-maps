@@ -5,6 +5,8 @@ Notes
 
 - Maryland
 
+- Florida has no lower data
+
 http://openstates.org/api/v1/committees/MDC000328/?apikey=myapi
 Maryland Appropriations Chair Norman Conway is missing the "C" in the member name field.
 
