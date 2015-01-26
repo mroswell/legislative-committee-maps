@@ -23,8 +23,16 @@
     <div class="entry entry-member-detail">
       <p style="margin-bottom:0;">
         {{#if detail.photo_url}}<img src="{{detail.photo_url}}" alt=""/>{{/if}}
-        <strong>{{detail.full_name}} ({{detail.party}}){{#if role}},
-        {{role}}{{/if}}</strong>
+        <strong>{{detail.full_name}}
+          {{#if detail.party}}({{detail.party}}){{/if}}
+          {{#if role}}, {{role}}{{/if}}</strong>
+        {{#if detail.votesmart_id}}<br />
+        <a target="_blank" href="http://votesmart.org/candidate/evaluations/{{detail.votesmart_id}}
+">Scorecards</a> &bull;
+        <a target="_blank" href="http://votesmart.org/candidate/campaign-finance/{{detail.votesmart_id}}/">Donors</a>
+        &bull;
+        <a target="_blank" href="http://votesmart.org/candidate/campaign-finance/{{detail.votesmart_id}}/"> Votes</a>
+      {{/if}}
         {{#if detail.district}}<br />District {{detail.district}}{{/if}}
         {{# each detail.offices}}
           {{#if name}}<br /><strong>{{name}}</strong>{{/if}}
@@ -32,7 +40,8 @@
           {{#if phone}}<br />{{phone}}{{/if}}
           {{#if email}}<br /><a href="mailto:{{email}}">{{email}}</a>{{/if}}
         {{/each}}
-        <br> {{detail.votesmart_id}}
+      </p>
+
     </div>
     {{/each}}
   </script>
