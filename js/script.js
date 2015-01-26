@@ -97,7 +97,32 @@ function listMembers(committee) {
   var html = app.memberTemplate(context);
   $('#committee-list')
     .html(html);
+
+  var memberDetail;
+  $("[data-member-id]").on("click", function(e) {
+    var ID = $(this).data("member-id");
+    console.log("committee",committee.members);
+    memberDetail = _.findWhere(committee.members, {leg_id: ID});
+    console.log("findwhere");
+    memberDetailFunction(memberDetail);
+  });
 }
+
+function memberDetailFunction(mDetail){
+  var memberContext = {
+    members: mDetail instanceof Array ? mDetail : [mDetail]
+  };
+  // console.log("memberContext: ", memberContext);
+  var htmlDetail = app.memberDetail(memberContext);
+//  var htmlDetail = templateDetail(memberContext);
+  if (memberContext.members.length>0) {
+    // console.log("length > 1", memberContext.members.length);
+    $('#member-detail').html(htmlDetail);
+  } else {
+    $('#member-detail').html('<p>Click a committee member<br />for detail. <br />Click the <i class="fa fa-link"></i> icon to visit the committee website. (It will open in a new window.) </p>');
+  }
+}
+
 
 $(document.body).on("click", "[data-cmte-id]",function(e) {
   e.preventDefault();
@@ -129,6 +154,10 @@ function init() {
   var sourceMembers = $("#committee-member-template")
     .html();
   app.memberTemplate = Handlebars.compile(sourceMembers);
+
+  var sourceMemberDetail = $("#committee-member-detail-template")
+    .html();
+  app.memberDetail = Handlebars.compile(sourceMemberDetail);
 }
 
 String.prototype.capitalize = function(){ return this.replace( /(^|\s)[a-z]/g , function(m){ return m.toUpperCase(); }); };

@@ -18,6 +18,19 @@
       </ul>
     </div>
   </script>
+  <script id="committee-member-detail-template" type="text/x-handlebars-template">
+    {{#each members}}
+    <div class="entry entry-member-detail">
+      <p style="margin-bottom:0;">
+        {{#if detail.photo_url}}<img src="{{detail.photo_url}}" alt=""/>{{/if}}
+        <strong>{{detail.full_name}} ({{detail.party}}){{#if role}},
+        {{role}}{{/if}}</strong>
+        {{#if detail.district}}<br />District {{detail.district}}{{/if}}
+        {{#if detail.email}}<br /><a href="mailto:{{detail.email}}">{{detail.email}}</a>{{/if}}
+        <br> {{detail.votesmart_id}}
+    </div>
+    {{/each}}
+  </script>
 </head>
 <body>
 <div class="row">
