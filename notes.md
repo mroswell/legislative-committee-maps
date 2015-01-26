@@ -24,3 +24,8 @@ Additional Fields
 - Arizona has +az_committee_id and +session fields.
 
 - Idaho has +description, +secretary, +office_hours, +office_phone fields
+
+
+
+Report:
+Bad image file: http://sov.state.va.us/images/Obenshain26.jpg

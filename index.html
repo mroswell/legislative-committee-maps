@@ -26,7 +26,12 @@
         <strong>{{detail.full_name}} ({{detail.party}}){{#if role}},
         {{role}}{{/if}}</strong>
         {{#if detail.district}}<br />District {{detail.district}}{{/if}}
-        {{#if detail.email}}<br /><a href="mailto:{{detail.email}}">{{detail.email}}</a>{{/if}}
+        {{# each detail.offices}}
+          {{#if name}}<br /><strong>{{name}}</strong>{{/if}}
+          {{#if address}}<br />{{breaklines address}}{{/if}}
+          {{#if phone}}<br />{{phone}}{{/if}}
+          {{#if email}}<br /><a href="mailto:{{email}}">{{email}}</a>{{/if}}
+        {{/each}}
         <br> {{detail.votesmart_id}}
     </div>
     {{/each}}

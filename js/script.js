@@ -32,7 +32,6 @@ var populateDropDown= function(state) {
 
 // Get committee detail
 var getCommitteeDetail= function (committee_id) {
-  console.log(committee_id);
   var committeeRequest = $.ajax({
     dataType: "json",
     url: "http://openstates.org/api/v1/committees/" + committee_id,
@@ -65,10 +64,8 @@ var addLegislators = function(committee) {
 
         if (counter === committee.members.length) {
 //          console.log("activeInIf",member.detail.active);
-          console.log("ADDLEG", committee);
           $('#update1-left pre').append(JSON.stringify(committee, null, 2));
           listMembers(committee);
-          console.log("AAA", committee);
         }
       //     }
       });
@@ -85,13 +82,14 @@ function listMembers(committee) {
   } else if (member.role) {
       member.role = member.role.capitalize();
     }
+    // just first letter of party
     if (member.detail.party) {
      member.detail.party = member.detail.party.slice(0,1);
   }
   });
 
-  var context = { cmte: committee,
-    committeeHandle: "Yay."
+  var context = {
+    cmte: committee
   };
 
   var html = app.memberTemplate(context);
@@ -146,6 +144,14 @@ function getQueryVariable(variable) {
   return(false);
 }
 
+Handlebars.registerHelper('breaklines', function(text) {
+  text = Handlebars.Utils.escapeExpression(text);
+  //some legislators, such as VAL000157 have successive newlines in the offices.address fields
+  text = text.replace(/(\n \n)/gm, '\n');
+  //replace "\n" with "<br />"
+  text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
+  return new Handlebars.SafeString(text);
+});
 
 var app = {};
 console.log("app", app);
