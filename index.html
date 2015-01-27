@@ -24,8 +24,7 @@
       <p style="margin-bottom:0;">
         {{#if detail.photo_url}}<img src="{{detail.photo_url}}" alt=""/>{{/if}}
         <strong>{{detail.full_name}}
-          {{#if detail.party}}({{detail.party}}){{/if}}
-          {{#if role}}, {{role}}{{/if}}</strong>
+          {{#if detail.party}}({{detail.party}}){{/if}}{{#if role}}, {{role}}{{/if}}</strong>
         {{#if detail.votesmart_id}}<br />
         <a target="_blank" href="http://votesmart.org/candidate/evaluations/{{detail.votesmart_id}}
 ">Scorecards</a> &bull;
