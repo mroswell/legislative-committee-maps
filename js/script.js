@@ -46,7 +46,7 @@ addLegislators(committee)
 
 // append legislator detail to committee
 var addLegislators = function(committee) {
-  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
+//  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
   committee.members.forEach(function(member, i) {
     var memberListRequest = $.ajax({
@@ -59,16 +59,16 @@ var addLegislators = function(committee) {
     }
   }).done(function(memberDetail) {
         if (memberDetail.active) {
-          console.log(memberDetail.full_name, "active");
+//          console.log(memberDetail.full_name, "active");
         } else {
-          console.log(memberDetail.full_name, "inactive");
+//          console.log(memberDetail.full_name, "inactive");
         }
         member.detail = memberDetail;
         counter++;
-        console.log("[[[",counter, i,"]]]");
+//        console.log("[[[",counter, i,"]]]");
         if (counter === committee.members.length) {
 //          console.log("activeInIf",member.detail.active);
-          $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+//          $('#update1-left pre').append(JSON.stringify(committee, null, 2));
           listMembers(committee);
         }
       //     }
@@ -79,7 +79,7 @@ var addLegislators = function(committee) {
 };
 
 function listMembers(committee) {
-  console.log("listMembers: ", committee);
+//  console.log("listMembers: ", committee);
   _.each(committee.members, function (member, i) {
     if (member.role.toLowerCase() === "member") {
      member.role = null;
@@ -102,12 +102,13 @@ function listMembers(committee) {
     .html(html);
 
   var memberDetail;
-  $("[data-member-id]").on("click", function(e) {
+//  $("[data-member-id]").on("click", function(e) {
+  jQuery(document.body).on("click", "[data-member-id]", function(e) {
     var ID = $(this).data("member-id");
-    console.log("committee",committee.members);
+ //   console.log("committee",committee.members);
     memberDetail = _.findWhere(committee.members, {leg_id: ID});
 //    setTimeout(500);
-    console.log("findwhere");
+ //   console.log("findwhere");
     memberDetailFunction(memberDetail);
   });
 }
@@ -135,6 +136,7 @@ $(document.body).on("click", "[data-cmte-id]",function(e) {
   $(this).parent().parent()
     .css('left', '-99999px')
     .removeClass("open");
+  $(".panel").html("Click a committee member<br />for detail.");
   getCommitteeDetail(committee_id);
 });
 
@@ -150,10 +152,86 @@ function getQueryVariable(variable) {
   return(false);
 }
 
+
+/*!
+ query-string
+ Parse and stringify URL query strings
+ https://github.com/sindresorhus/query-string
+ by Sindre Sorhus
+ MIT License
+ */
+(function () {
+  'use strict';
+  var queryString = {};
+  queryString.parse = function (str) {
+    if (typeof str !== 'string') {
+      return {};
+    }
+    str = str.trim().replace(/^\?/, '');
+    if (!str) {
+      return {};
+    }
+    return str.trim().split('&').reduce(function (ret, param) {
+      var parts = param.replace(/\+/g, ' ').split('=');
+      var key = parts[0];
+      var val = parts[1];
+      key = decodeURIComponent(key);
+      // missing `=` should be `null`:
+      // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+      val = val === undefined ? null : decodeURIComponent(val);
+      if (!ret.hasOwnProperty(key)) {
+        ret[key] = val;
+      } else if (Array.isArray(ret[key])) {
+        ret[key].push(val);
+      } else {
+        ret[key] = [ret[key], val];
+      }
+      return ret;
+    }, {});
+  };
+  queryString.stringify = function (obj) {
+    return obj ? Object.keys(obj).map(function (key) {
+      var val = obj[key];
+      if (Array.isArray(val)) {
+        return val.map(function (val2) {
+          return encodeURIComponent(key) + '=' + encodeURIComponent(val2);
+        }).join('&');
+      }
+      return encodeURIComponent(key) + '=' + encodeURIComponent(val);
+    }).join('&') : '';
+  };
+  queryString.push = function (key, new_value) {
+    var params = queryString.parse(location.search);
+    if(new_value == null){
+      delete params[key];
+    } else {
+      params[key] = new_value;
+    }
+    var new_params_string = queryString.stringify(params);
+    history.pushState({}, "", window.location.pathname + '?' + new_params_string);
+  };
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = queryString;
+  } else {
+    window.queryString = queryString;
+  }
+})();
+
+
+
+$("select").change(function(){
+  console.log($(this).val());
+  var selectedState = $(this).val();
+  queryString.push('state', selectedState);
+  window.location.reload();
+//  populateDropDown(state);
+});
+
+
 Handlebars.registerHelper('breaklines', function(text) {
   text = Handlebars.Utils.escapeExpression(text);
   //some legislators, such as VAL000157 have successive newlines in the offices.address fields
-  text = text.replace(/(\n \n)/gm, '\n');
+  text = text.replace(/(\n ?\n)/gm, '\n');
   //replace "\n" with "<br />"
   text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
   return new Handlebars.SafeString(text);
@@ -163,6 +241,11 @@ var app = {};
 console.log("app", app);
 
 function init() {
+  var state1 = getQueryVariable("state");
+  $('select option[value="' + state1 + '"]').prop('selected',true);
+//  console.log("INIT>>>>>");
+  populateDropDown(state1);
+
   var sourceMembers = $("#committee-member-template")
     .html();
   app.memberTemplate = Handlebars.compile(sourceMembers);
@@ -170,6 +253,7 @@ function init() {
   var sourceMemberDetail = $("#committee-member-detail-template")
     .html();
   app.memberDetail = Handlebars.compile(sourceMemberDetail);
+
 }
 
 String.prototype.capitalize = function(){ return this.replace( /(^|\s)[a-z]/g , function(m){ return m.toUpperCase(); }); };
