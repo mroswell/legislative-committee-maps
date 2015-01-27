@@ -48,8 +48,7 @@ addLegislators(committee)
 var addLegislators = function(committee) {
   $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
-  committee.members.forEach(function(member) {
-
+  committee.members.forEach(function(member, i) {
     var memberListRequest = $.ajax({
     dataType: "json",
     url: "http://openstates.org/api/v1/legislators/" + member.leg_id, //committee.members[i].leg_id,
@@ -59,9 +58,14 @@ var addLegislators = function(committee) {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   }).done(function(memberDetail) {
+        if (memberDetail.active) {
+          console.log(memberDetail.full_name, "active");
+        } else {
+          console.log(memberDetail.full_name, "inactive");
+        }
         member.detail = memberDetail;
         counter++;
-
+        console.log("[[[",counter, i,"]]]");
         if (counter === committee.members.length) {
 //          console.log("activeInIf",member.detail.active);
           $('#update1-left pre').append(JSON.stringify(committee, null, 2));
@@ -88,6 +92,7 @@ function listMembers(committee) {
   }
   });
 
+  //create context for template
   var context = {
     cmte: committee
   };
@@ -101,6 +106,7 @@ function listMembers(committee) {
     var ID = $(this).data("member-id");
     console.log("committee",committee.members);
     memberDetail = _.findWhere(committee.members, {leg_id: ID});
+//    setTimeout(500);
     console.log("findwhere");
     memberDetailFunction(memberDetail);
   });
