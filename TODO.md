@@ -1,13 +1,14 @@
+- use localStorage to redirect home page to users' favorite state.
 - Why does null email print a blank line? check Handlebars registerHelper for possible issue
-- state selector (dropdown and/or map)
-- clear member detail upon selecting a new committee
+- DONE. state selector (dropdown and/or map)
+- DONE. clear member detail upon selecting a new committee
 - enable permalinks
 - only display active members
 - Determine why Maryland party is empty. UPDATE: per Sunlight Foundation, Maryland updates likely in February
 - sort members for memberList, so that chairs are at the top.
 - Modify SC "Vice-chair" to be "Vice-Chair"
 - DONE. use url parameter to determine state
-- research and use state url parameter and json file to determine the names for "House and Senate";
+- research names, and use state url parameter and json file to determine the names for "House and Senate";
 - DONE. alphabetize committees within dropdown
 - split large committee lists into two or three columns?
 - Do membership queries for each member, and attach results to the committee object.
