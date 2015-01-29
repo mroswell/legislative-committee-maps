@@ -1,7 +1,6 @@
 //var committee ={};
-
 // Get names of the committees
-var populateDropDown= function(state) {
+var populateDropDown = function(state) {
   var committeeListRequest = $.ajax({
     dataType: "json",
     url: "http://openstates.org/api/v1/committees/",
@@ -11,25 +10,26 @@ var populateDropDown= function(state) {
     }
   }).done(function(committeeList) {
       committees = _.reject(committeeList, 'subcommittee');
-      upperCommittees = _.where(committees, {chamber: "upper"});
-      lowerCommittees = _.where(committees,{chamber:"lower"});
+      upperCommittees = _.where(committees, {
+        chamber: "upper"
+      });
+      lowerCommittees = _.where(committees, {
+        chamber: "lower"
+      });
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
-
       var sortedUpperOutput = "";
-        $.each(sortedUpperCommittees, function(key, val) {
-        sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + val.id +'">' + val.committee + '</a></li>';
+      $.each(sortedUpperCommittees, function(key, val) {
+        sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
       });
       var sortedLowerOutput = "";
-        $.each(sortedLowerCommittees, function(key, val) {
-        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id +'">' + val.committee + '</a></li>';
+      $.each(sortedLowerCommittees, function(key, val) {
+        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
       });
-
       $('ul#tinyDropUpper').prepend(sortedUpperOutput);
       $('ul#tinyDropLower').prepend(sortedLowerOutput);
     })
 };
-
 // Get committee detail
 var getCommitteeDetail= function (committee_id) {
   var committeeRequest = $.ajax({
@@ -38,16 +38,15 @@ var getCommitteeDetail= function (committee_id) {
     data: {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
-  }).done(function(committee, textStatus, jqXHR){
+  }).done(function(committee, textStatus, jqXHR) {
       console.log("DONE", textStatus, jqXHR);
       leg_id_array = _.pluck(committee.members, 'leg_id');
 addLegislators(committee)
     });
 };
-
 // append legislator detail to committee
 var addLegislators = function(committee) {
-//  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
+  //  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
   committee.members.forEach(function(member, i) {
     var memberListRequest = $.ajax({
@@ -92,18 +91,14 @@ function listMembers(committee) {
      member.detail.party = member.detail.party.slice(0,1);
   }
   });
-
   //create context for template
   var context = {
     cmte: committee
   };
-
   var html = app.memberTemplate(context);
-  $('#committee-list')
-    .html(html);
-
+  $('#committee-list').html(html);
   var memberDetail;
-//  $("[data-member-id]").on("click", function(e) {
+  //  $("[data-member-id]").on("click", function(e) {
   jQuery(document.body).on("click", "[data-member-id]", function(e) {
     var ID = $(this).data("member-id");
  //   console.log("committee",committee.members);
@@ -114,46 +109,39 @@ function listMembers(committee) {
   });
 }
 
-function memberDetailFunction(mDetail){
+function memberDetailFunction(mDetail) {
   var memberContext = {
     members: mDetail instanceof Array ? mDetail : [mDetail]
   };
   // console.log("memberContext: ", memberContext);
   var htmlDetail = app.memberDetail(memberContext);
-//  var htmlDetail = templateDetail(memberContext);
-  if (memberContext.members.length>0) {
-    // console.log("length > 1", memberContext.members.length);
+  //  var htmlDetail = templateDetail(memberContext);
+  if (memberContext.members.length > 0) {
     $('#member-detail').html(htmlDetail);
   } else {
     $('#member-detail').html('<p>Click a committee member<br />for detail. <br />Click the <i class="fa fa-link"></i> icon to visit the committee website. (It will open in a new window.) </p>');
   }
 }
-
-
-$(document.body).on("click", "[data-cmte-id]",function(e) {
+$(document.body).on("click", "[data-cmte-id]", function(e) {
   e.preventDefault();
   var committee_id = $(this).data("cmte-id");
   console.log('data-committee', committee_id);
-  $(this).parent().parent()
-    .css('left', '-99999px')
-    .removeClass("open");
-  $(".panel").html("Click a committee member for detail.");
+  $(this).parent().parent().css('left', '-99999px').removeClass("open");
+  $(".panel").html("Click a committee member for detail. <i class='fa fa-long-arrow-right'></i>");
   getCommitteeDetail(committee_id);
 });
-
-
 // http://css-tricks.com/snippets/javascript/get-url-variables/
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
-  for (var i=0;i<vars.length;i++) {
+  for (var i = 0; i < vars.length; i++) {
     var pair = vars[i].split("=");
-    if(pair[0] == variable){return pair[1];}
+    if (pair[0] == variable) {
+      return pair[1];
+    }
   }
-  return(false);
+  return (false);
 }
-
-
 /*!
  query-string
  Parse and stringify URL query strings
@@ -161,10 +149,10 @@ function getQueryVariable(variable) {
  by Sindre Sorhus
  MIT License
  */
-(function () {
+(function() {
   'use strict';
   var queryString = {};
-  queryString.parse = function (str) {
+  queryString.parse = function(str) {
     if (typeof str !== 'string') {
       return {};
     }
@@ -172,7 +160,7 @@ function getQueryVariable(variable) {
     if (!str) {
       return {};
     }
-    return str.trim().split('&').reduce(function (ret, param) {
+    return str.trim().split('&').reduce(function(ret, param) {
       var parts = param.replace(/\+/g, ' ').split('=');
       var key = parts[0];
       var val = parts[1];
@@ -190,20 +178,20 @@ function getQueryVariable(variable) {
       return ret;
     }, {});
   };
-  queryString.stringify = function (obj) {
-    return obj ? Object.keys(obj).map(function (key) {
+  queryString.stringify = function(obj) {
+    return obj ? Object.keys(obj).map(function(key) {
       var val = obj[key];
       if (Array.isArray(val)) {
-        return val.map(function (val2) {
+        return val.map(function(val2) {
           return encodeURIComponent(key) + '=' + encodeURIComponent(val2);
         }).join('&');
       }
       return encodeURIComponent(key) + '=' + encodeURIComponent(val);
     }).join('&') : '';
   };
-  queryString.push = function (key, new_value) {
+  queryString.push = function(key, new_value) {
     var params = queryString.parse(location.search);
-    if(new_value == null){
+    if (new_value == null) {
       delete params[key];
     } else {
       params[key] = new_value;
@@ -217,18 +205,13 @@ function getQueryVariable(variable) {
     window.queryString = queryString;
   }
 })();
-
-
-
-$("select").change(function(){
+$("select").change(function() {
   console.log($(this).val());
   var selectedState = $(this).val();
   queryString.push('state', selectedState);
   window.location.reload();
 //  populateDropDown(state);
 });
-
-
 Handlebars.registerHelper('breaklines', function(text) {
   text = Handlebars.Utils.escapeExpression(text);
   //some legislators, such as VAL000157 have successive newlines in the offices.address fields
@@ -237,25 +220,21 @@ Handlebars.registerHelper('breaklines', function(text) {
   text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
   return new Handlebars.SafeString(text);
 });
-
 var app = {};
 
 function init() {
   var state1 = getQueryVariable("state");
-  $('select option[value="' + state1 + '"]').prop('selected',true);
-//  console.log("INIT>>>>>");
+  $('select option[value="' + state1 + '"]').prop('selected', true);
   populateDropDown(state1);
-
-  var sourceMembers = $("#committee-member-template")
-    .html();
+  var sourceMembers = $("#committee-member-template").html();
   app.memberTemplate = Handlebars.compile(sourceMembers);
-
-  var sourceMemberDetail = $("#committee-member-detail-template")
-    .html();
+  var sourceMemberDetail = $("#committee-member-detail-template").html();
   app.memberDetail = Handlebars.compile(sourceMemberDetail);
-
 }
-
-String.prototype.capitalize = function(){ return this.replace( /(^|\s)[a-z]/g , function(m){ return m.toUpperCase(); }); };
-
+String.prototype.capitalize = function() {
+  return this.replace(/(^|\s)[a-z]/g, function(m) {
+    return m.toUpperCase();
+  });
+};
 init();
+
