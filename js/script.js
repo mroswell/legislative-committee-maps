@@ -39,43 +39,74 @@ var getCommitteeDetail = function(committee_id) {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   }).done(function(committee, textStatus, jqXHR) {
+      var counter = 0;
       console.log("DONE", textStatus, jqXHR);
       leg_id_array = _.pluck(committee.members, 'leg_id');
-addLegislators(committee)
+      console.log("memberIDs", leg_id_array);
+      console.log("members.length", committee.members.length);
+      if (committee.members.length > 0) {
+//        $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+        console.log("COUNTER", counter, committee.members[counter]);
+        committee.members.forEach(function(member, i) {
+          console.log("i", i, "counter", counter, committee);
+          if (committee.members[counter].leg_id) {
+            console.log("grab committee members[i]", committee.members[i].leg_id);
+            console.log("grab committee members[counter]", committee.members[i].leg_id);
+          }
+          if (!committee.members[i].leg_id) {
+            console.log("getCOMMITEEDETAIL1", committee.members[i]);
+            console.log(committee.members[i].name, "Member deleted, because of null id")
+            delete committee.members[i].leg_id;
+            console.log("getCOMMITEEDETAIL2", committee.members[i]);
+          }
+          counter++;
+
+        });
+        //        if (committee.members[i].leg_id != null) {
+        //          console.log("getCOMMITEEDETAIL", committee.members[i]);
+        //        }
+        console.log(committee);
+        addLegislators(committee)
+      } else {
+        $(".panel").html("<div id='no-reported'>This committee <br/>(" + committee.committee + ")<br/>has no reported members.</div>");
+        $(".entry").html("");
+      }
     });
 };
 // append legislator detail to committee
 var addLegislators = function(committee) {
   //  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
   var counter = 0;
+  console.log("addLeg1", committee);
   committee.members.forEach(function(member, i) {
-    var memberListRequest = $.ajax({
-    dataType: "json",
-    url: "http://openstates.org/api/v1/legislators/" + member.leg_id, //committee.members[i].leg_id,
-    data: {
-//      state: state,
-      active: true,
-      apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
+    if (member.leg_id) {
+      console.log("addLEGISLATORS", i, member.leg_id);
+      var memberListRequest = $.ajax({
+        dataType: "json",
+        url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/", //committee.members[i].leg_id,
+        data: {
+          //      state: state,
+          active: true,
+          apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
+        }
+      }).done(function(memberDetail) {
+          if (memberDetail.active) {
+            //          console.log(memberDetail.full_name, "active");
+          } else {
+            //          console.log(memberDetail.full_name, "inactive");
+          }
+          member.detail = memberDetail;
+          counter++;
+          //        console.log("[[[",counter, i,"]]]");
+          if (committee.members.length) {
+            //          console.log("activeInIf",member.detail.active);
+            $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+            listMembers(committee);
+          }
+          //     }
+        })
     }
-  }).done(function(memberDetail) {
-        if (memberDetail.active) {
-//          console.log(memberDetail.full_name, "active");
-        } else {
-//          console.log(memberDetail.full_name, "inactive");
-        }
-        member.detail = memberDetail;
-        counter++;
-//        console.log("[[[",counter, i,"]]]");
-        if (counter === committee.members.length) {
-//          console.log("activeInIf",member.detail.active);
-//          $('#update1-left pre').append(JSON.stringify(committee, null, 2));
-          listMembers(committee);
-        }
-      //     }
-      });
-
-  });
-
+  })
 };
 
 function listMembers(committee) {
@@ -90,9 +121,11 @@ function listMembers(committee) {
       }
     }
     // just first letter of party
-    if (member.detail.party) {
-     member.detail.party = member.detail.party.slice(0,1);
-  }
+    if (member.detail) {
+      if (member.detail.party) {
+        member.detail.party = member.detail.party.slice(0, 1);
+      }
+    }
   });
   //create context for template
   var context = {
@@ -212,7 +245,11 @@ $("select").change(function() {
   var selectedState = $(this).val();
   queryString.push('state', selectedState);
   window.location.reload();
-//  populateDropDown(state);
+  //  populateDropDown(state);
+});
+$("img").error(function() {
+  $(this).hide();
+  // or $(this).css({visibility:"hidden"});
 });
 Handlebars.registerHelper('breaklines', function(text) {
   text = Handlebars.Utils.escapeExpression(text);
