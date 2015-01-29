@@ -34,11 +34,12 @@ var populateDropDown= function(state) {
 var getCommitteeDetail= function (committee_id) {
   var committeeRequest = $.ajax({
     dataType: "json",
-    url: "http://openstates.org/api/v1/committees/" + committee_id,
+    url: "http://openstates.org/api/v1/committees/" + committee_id + "/",
     data: {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
-  }).done(function(committee){
+  }).done(function(committee, textStatus, jqXHR){
+      console.log("DONE", textStatus, jqXHR);
       leg_id_array = _.pluck(committee.members, 'leg_id');
 addLegislators(committee)
     });
@@ -136,7 +137,7 @@ $(document.body).on("click", "[data-cmte-id]",function(e) {
   $(this).parent().parent()
     .css('left', '-99999px')
     .removeClass("open");
-  $(".panel").html("Click a committee member<br />for detail.");
+  $(".panel").html("Click a committee member for detail.");
   getCommitteeDetail(committee_id);
 });
 
@@ -238,7 +239,6 @@ Handlebars.registerHelper('breaklines', function(text) {
 });
 
 var app = {};
-console.log("app", app);
 
 function init() {
   var state1 = getQueryVariable("state");
