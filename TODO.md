@@ -1,3 +1,6 @@
+- implement site tour tool such as JoyRide
+- Decide: separate site, or part of committee maps? If the latter: combine repos.
+- Build Feedback forms (one for site, and one for member panel)
 - use localStorage to redirect home page to users' favorite state.
 - Why does null email print a blank line? check Handlebars registerHelper for possible issue
 - DONE. state selector (dropdown and/or map)
@@ -23,4 +26,4 @@
 
 Farther along
 - add subcommittees and permalinks
-- Work with OpenStates -- maybe organize a hackathon -- to add social media data for legislators
+- Work with OpenStates -- maybe organize a hackathon -- to add social media data for legislators; Build tool for collecting Twitter and Facebook ids
