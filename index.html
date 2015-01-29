@@ -22,7 +22,7 @@
     {{#each members}}
     <div class="entry entry-member-detail">
       <p style="margin-bottom:0;">
-        {{#if detail.photo_url}}<img src="{{detail.photo_url}}" alt=""/>{{/if}}
+        {{#if detail.photo_url}}<img onerror='this.style.display = "none"' src="{{detail.photo_url}}" alt=""/>{{/if}}
         <strong>{{detail.full_name}}
           {{#if detail.party}}({{detail.party}}){{/if}}{{#if role}}, {{role}}{{/if}}</strong>
         {{#if detail.votesmart_id}}<br />
