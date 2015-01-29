@@ -31,7 +31,7 @@ var populateDropDown = function(state) {
     })
 };
 // Get committee detail
-var getCommitteeDetail= function (committee_id) {
+var getCommitteeDetail = function(committee_id) {
   var committeeRequest = $.ajax({
     dataType: "json",
     url: "http://openstates.org/api/v1/committees/" + committee_id + "/",
@@ -79,12 +79,15 @@ var addLegislators = function(committee) {
 };
 
 function listMembers(committee) {
-//  console.log("listMembers: ", committee);
-  _.each(committee.members, function (member, i) {
-    if (member.role.toLowerCase() === "member") {
-     member.role = null;
-  } else if (member.role) {
-      member.role = member.role.capitalize();
+  //  console.log("listMembers: ", committee);
+  _.each(committee.members, function(member, i) {
+    console.log("listMEMBERS", member);
+    if (member.role) {
+      if (member.role.toLowerCase() === "member") {
+        member.role = null;
+      } else if (member.role) {
+        member.role = member.role.capitalize();
+      }
     }
     // just first letter of party
     if (member.detail.party) {
@@ -101,10 +104,9 @@ function listMembers(committee) {
   //  $("[data-member-id]").on("click", function(e) {
   jQuery(document.body).on("click", "[data-member-id]", function(e) {
     var ID = $(this).data("member-id");
- //   console.log("committee",committee.members);
-    memberDetail = _.findWhere(committee.members, {leg_id: ID});
-//    setTimeout(500);
- //   console.log("findwhere");
+    memberDetail = _.findWhere(committee.members, {
+      leg_id: ID
+    });
     memberDetailFunction(memberDetail);
   });
 }
