@@ -46,7 +46,6 @@ var getCommitteeDetail = function(committee_id) {
       leg_id_array = _.pluck(committee.members, 'leg_id');
       console.log("memberIDs", leg_id_array);
       if (committee.members.length > 0) {
-        //        $('#update1-left pre').append(JSON.stringify(committee, null, 2));
         console.log(committee);
         addLegislators(committee)
       } else {
@@ -84,7 +83,7 @@ var addLegislators = function(committee) {
           }
           member.detail = memberDetail;
           if (committee.members.length) {
-            //            $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+//                        $('#update1-left pre').append(JSON.stringify(committee, null, 2));
             listMembers(committee);
           }
         })
