@@ -1,3 +1,4 @@
+- Handle subcommittees
 - About page: Map showing status of each state
 - implement site tour tool such as JoyRide
 - Decide: separate site, or part of committee maps? If the latter: combine repos.
