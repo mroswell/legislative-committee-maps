@@ -12,7 +12,7 @@
       <ul>
         {{#each cmte.members}}
         <li><a href="javascript:void(0);" data-member-id="{{leg_id}}">
-          {{detail.full_name}} ({{detail.party}}){{#if detail.district}}-{{detail.district}}{{/if}}{{#if role}},
+          {{detail.full_name}}{{#if detail.party}} ({{detail.party}}{{/if}}{{#if detail.district}}&ndash;{{detail.district}}){{/if}}{{#if role}},
           {{role}}{{/if}}</a></li>
         {{/each}}
       </ul>
@@ -23,8 +23,8 @@
     <div class="entry entry-member-detail">
       <p style="margin-bottom:0;">
         {{#if detail.photo_url}}<img onerror='this.style.display = "none"' src="{{detail.photo_url}}" alt=""/>{{/if}}
-        <strong>{{detail.full_name}}
-          {{#if detail.party}}({{detail.party}}){{/if}}{{#if role}}, {{role}}{{/if}}</strong>
+        <strong>{{detail.full_name}}{{#if detail.party}} ({{detail.party}}){{/if}}{{#if role}},
+          {{role}}{{/if}}</strong>
         {{#if detail.votesmart_id}}<br />
         <a target="_blank" href="http://votesmart.org/candidate/evaluations/{{detail.votesmart_id}}
 ">Scorecards</a> &bull;
@@ -37,8 +37,8 @@
           {{#if name}}<br /><strong>{{name}}</strong>{{/if}}
           {{#if address}}<br />{{breaklines address}}{{/if}}
           {{#if phone}}<br />{{phone}}{{/if}}
-          {{#if email}}<br /><a href="mailto:{{email}}">{{email}}</a>{{/if}}
         {{/each}}
+        {{#if detail.email}}<br /><a href="mailto:{{detail.email}}">{{detail.email}}</a>{{/if}}
       </p>
 
     </div>
