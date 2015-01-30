@@ -1,4 +1,3 @@
-//var committee ={};
 // Get names of the committees
 var populateDropDown = function(state) {
   var committeeListRequest = $.ajax({
@@ -8,7 +7,8 @@ var populateDropDown = function(state) {
       state: state,
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
-  }).done(function(committeeList) {
+  })
+    .done(function(committeeList) {
       committees = _.reject(committeeList, 'subcommittee');
       upperCommittees = _.where(committees, {
         chamber: "upper"
@@ -26,8 +26,10 @@ var populateDropDown = function(state) {
       $.each(sortedLowerCommittees, function(key, val) {
         sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
       });
-      $('ul#tinyDropUpper').prepend(sortedUpperOutput);
-      $('ul#tinyDropLower').prepend(sortedLowerOutput);
+      $('ul#tinyDropUpper')
+        .prepend(sortedUpperOutput);
+      $('ul#tinyDropLower')
+        .prepend(sortedLowerOutput);
     })
 };
 // Get committee detail
@@ -38,133 +40,106 @@ var getCommitteeDetail = function(committee_id) {
     data: {
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
-  }).done(function(committee, textStatus, jqXHR) {
+  })
+    .done(function(committee, textStatus, jqXHR) {
       var counter = 0;
-      console.log("DONE", textStatus, jqXHR);
       leg_id_array = _.pluck(committee.members, 'leg_id');
       console.log("memberIDs", leg_id_array);
-      console.log("members.length", committee.members.length);
       if (committee.members.length > 0) {
-//        $('#update1-left pre').append(JSON.stringify(committee, null, 2));
-        console.log("COUNTER", counter, committee.members[counter]);
-        committee.members.forEach(function(member, i) {
-          console.log("i", i, "counter", counter, committee);
-          if (committee.members[counter].leg_id) {
-            console.log("grab committee members[i]", committee.members[i].leg_id);
-            console.log("grab committee members[counter]", committee.members[i].leg_id);
-          }
-          if (!committee.members[i].leg_id) {
-            console.log("getCOMMITEEDETAIL1", committee.members[i]);
-            console.log(committee.members[i].name, "Member deleted, because of null id")
-            delete committee.members[i].leg_id;
-            console.log("getCOMMITEEDETAIL2", committee.members[i]);
-          }
-          counter++;
-
-        });
-        //        if (committee.members[i].leg_id != null) {
-        //          console.log("getCOMMITEEDETAIL", committee.members[i]);
-        //        }
+        //        $('#update1-left pre').append(JSON.stringify(committee, null, 2));
         console.log(committee);
         addLegislators(committee)
       } else {
-        $(".panel").html("<div id='no-reported'>This committee <br/>(" + committee.committee + ")<br/>has no reported members.</div>");
-        $(".entry").html("");
+        $(".panel")
+          .html("<div id='no-reported'>This committee <br/>(" + committee.committee + ")<br/>has no reported members.</div>");
+        $(".entry")
+          .html("");
       }
     });
 };
 // append legislator detail to committee
 var addLegislators = function(committee) {
   //  $('#update1-left pre').html("<h2>"+committee.committee+"</h2>");
-  var counter = 0;
-  console.log("addLeg1", committee);
   committee.members.forEach(function(member, i) {
     if (member.leg_id) {
-      console.log("addLEGISLATORS", i, member.leg_id);
       var memberListRequest = $.ajax({
         dataType: "json",
-        url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/", //committee.members[i].leg_id,
+        url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/",
         data: {
-          //      state: state,
           active: true,
           apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
         }
-      }).done(function(memberDetail) {
-          if (memberDetail.active) {
-            //          console.log(memberDetail.full_name, "active");
-          } else {
-            //          console.log(memberDetail.full_name, "inactive");
+      })
+        .done(function(memberDetail) {
+          if (committee.members[i].role) {
+            if (committee.members[i].role.toLowerCase() === "member") {
+              committee.members[i].role = null;
+            } else {
+              committee.members[i].role = committee.members[i].role.capitalize();
+            }
+          }
+          // just first letter of party
+          if (memberDetail.party) {
+            memberDetail.party = memberDetail.party.slice(0, 1);
           }
           member.detail = memberDetail;
-          counter++;
-          //        console.log("[[[",counter, i,"]]]");
           if (committee.members.length) {
-            //          console.log("activeInIf",member.detail.active);
-            $('#update1-left pre').append(JSON.stringify(committee, null, 2));
+            //            $('#update1-left pre').append(JSON.stringify(committee, null, 2));
             listMembers(committee);
           }
-          //     }
         })
     }
   })
 };
 
 function listMembers(committee) {
-  //  console.log("listMembers: ", committee);
-  _.each(committee.members, function(member, i) {
-    console.log("listMEMBERS", member);
-    if (member.role) {
-      if (member.role.toLowerCase() === "member") {
-        member.role = null;
-      } else if (member.role) {
-        member.role = member.role.capitalize();
-      }
-    }
-    // just first letter of party
-    if (member.detail) {
-      if (member.detail.party) {
-        member.detail.party = member.detail.party.slice(0, 1);
-      }
-    }
-  });
-  //create context for template
   var context = {
     cmte: committee
   };
   var html = app.memberTemplate(context);
-  $('#committee-list').html(html);
+  $('#committee-list')
+    .html(html);
   var memberDetail;
   //  $("[data-member-id]").on("click", function(e) {
-  jQuery(document.body).on("click", "[data-member-id]", function(e) {
-    var ID = $(this).data("member-id");
-    memberDetail = _.findWhere(committee.members, {
-      leg_id: ID
+  jQuery(document.body)
+    .on("click", "[data-member-id]", function(e) {
+      var ID = $(this)
+        .data("member-id");
+      memberDetail = _.findWhere(committee.members, {
+        leg_id: ID
+      });
+      memberDetailFunction(memberDetail);
     });
-    memberDetailFunction(memberDetail);
-  });
 }
 
 function memberDetailFunction(mDetail) {
   var memberContext = {
     members: mDetail instanceof Array ? mDetail : [mDetail]
   };
-  // console.log("memberContext: ", memberContext);
   var htmlDetail = app.memberDetail(memberContext);
-  //  var htmlDetail = templateDetail(memberContext);
   if (memberContext.members.length > 0) {
-    $('#member-detail').html(htmlDetail);
+    $('#member-detail')
+      .html(htmlDetail);
   } else {
-    $('#member-detail').html('<p>Click a committee member<br />for detail. <br />Click the <i class="fa fa-link"></i> icon to visit the committee website. (It will open in a new window.) </p>');
+    $('#member-detail')
+      .html('<p>Click a committee member<br />for detail. <br />Click the <i class="fa fa-link"></i> icon to visit the committee website. (It will open in a new window.) </p>');
   }
 }
-$(document.body).on("click", "[data-cmte-id]", function(e) {
-  e.preventDefault();
-  var committee_id = $(this).data("cmte-id");
-  console.log('data-committee', committee_id);
-  $(this).parent().parent().css('left', '-99999px').removeClass("open");
-  $(".panel").html("Click a committee member for detail. <i class='fa fa-long-arrow-right'></i>");
-  getCommitteeDetail(committee_id);
-});
+$(document.body)
+  .on("click", "[data-cmte-id]", function(e) {
+    e.preventDefault();
+    var committee_id = $(this)
+      .data("cmte-id");
+    console.log('data-committee', committee_id);
+    $(this)
+      .parent()
+      .parent()
+      .css('left', '-99999px')
+      .removeClass("open");
+    $(".panel")
+      .html("Click a committee member for detail. <i class='fa fa-long-arrow-right'></i>");
+    getCommitteeDetail(committee_id);
+  });
 // http://css-tricks.com/snippets/javascript/get-url-variables/
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
@@ -191,38 +166,45 @@ function getQueryVariable(variable) {
     if (typeof str !== 'string') {
       return {};
     }
-    str = str.trim().replace(/^\?/, '');
+    str = str.trim()
+      .replace(/^\?/, '');
     if (!str) {
       return {};
     }
-    return str.trim().split('&').reduce(function(ret, param) {
-      var parts = param.replace(/\+/g, ' ').split('=');
-      var key = parts[0];
-      var val = parts[1];
-      key = decodeURIComponent(key);
-      // missing `=` should be `null`:
-      // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-      val = val === undefined ? null : decodeURIComponent(val);
-      if (!ret.hasOwnProperty(key)) {
-        ret[key] = val;
-      } else if (Array.isArray(ret[key])) {
-        ret[key].push(val);
-      } else {
-        ret[key] = [ret[key], val];
-      }
-      return ret;
-    }, {});
+    return str.trim()
+      .split('&')
+      .reduce(function(ret, param) {
+        var parts = param.replace(/\+/g, ' ')
+          .split('=');
+        var key = parts[0];
+        var val = parts[1];
+        key = decodeURIComponent(key);
+        // missing `=` should be `null`:
+        // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+        val = val === undefined ? null : decodeURIComponent(val);
+        if (!ret.hasOwnProperty(key)) {
+          ret[key] = val;
+        } else if (Array.isArray(ret[key])) {
+          ret[key].push(val);
+        } else {
+          ret[key] = [ret[key], val];
+        }
+        return ret;
+      }, {});
   };
   queryString.stringify = function(obj) {
-    return obj ? Object.keys(obj).map(function(key) {
-      var val = obj[key];
-      if (Array.isArray(val)) {
-        return val.map(function(val2) {
-          return encodeURIComponent(key) + '=' + encodeURIComponent(val2);
-        }).join('&');
-      }
-      return encodeURIComponent(key) + '=' + encodeURIComponent(val);
-    }).join('&') : '';
+    return obj ? Object.keys(obj)
+      .map(function(key) {
+        var val = obj[key];
+        if (Array.isArray(val)) {
+          return val.map(function(val2) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(val2);
+          })
+            .join('&');
+        }
+        return encodeURIComponent(key) + '=' + encodeURIComponent(val);
+      })
+      .join('&') : '';
   };
   queryString.push = function(key, new_value) {
     var params = queryString.parse(location.search);
@@ -240,17 +222,22 @@ function getQueryVariable(variable) {
     window.queryString = queryString;
   }
 })();
-$("select").change(function() {
-  console.log($(this).val());
-  var selectedState = $(this).val();
-  queryString.push('state', selectedState);
-  window.location.reload();
-  //  populateDropDown(state);
-});
-$("img").error(function() {
-  $(this).hide();
-  // or $(this).css({visibility:"hidden"});
-});
+$("select")
+  .change(function() {
+    console.log($(this)
+      .val());
+    var selectedState = $(this)
+      .val();
+    queryString.push('state', selectedState);
+    window.location.reload();
+    //  populateDropDown(state);
+  });
+$("img")
+  .error(function() {
+    $(this)
+      .hide();
+    // or $(this).css({visibility:"hidden"});
+  });
 Handlebars.registerHelper('breaklines', function(text) {
   text = Handlebars.Utils.escapeExpression(text);
   //some legislators, such as VAL000157 have successive newlines in the offices.address fields
@@ -263,11 +250,14 @@ var app = {};
 
 function init() {
   var state1 = getQueryVariable("state");
-  $('select option[value="' + state1 + '"]').prop('selected', true);
+  $('select option[value="' + state1 + '"]')
+    .prop('selected', true);
   populateDropDown(state1);
-  var sourceMembers = $("#committee-member-template").html();
+  var sourceMembers = $("#committee-member-template")
+    .html();
   app.memberTemplate = Handlebars.compile(sourceMembers);
-  var sourceMemberDetail = $("#committee-member-detail-template").html();
+  var sourceMemberDetail = $("#committee-member-detail-template")
+    .html();
   app.memberDetail = Handlebars.compile(sourceMemberDetail);
 }
 String.prototype.capitalize = function() {
@@ -276,4 +266,3 @@ String.prototype.capitalize = function() {
   });
 };
 init();
-
