@@ -129,6 +129,7 @@ $(document.body)
     e.preventDefault();
     var committee_id = $(this)
       .data("cmte-id");
+    queryString.push('committee', committee_id);
     console.log('data-committee', committee_id);
     $(this)
       .parent()
@@ -258,6 +259,11 @@ function init() {
   var sourceMemberDetail = $("#committee-member-detail-template")
     .html();
   app.memberDetail = Handlebars.compile(sourceMemberDetail);
+
+  var committee1 = getQueryVariable("committee");
+  if (committee1) {
+    $('[data-cmte-id="'+committee1+'"]').click();
+  }
 }
 String.prototype.capitalize = function() {
   return this.replace(/(^|\s)[a-z]/g, function(m) {
