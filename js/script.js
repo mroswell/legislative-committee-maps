@@ -249,8 +249,12 @@ var app = {};
 
 function init() {
   var state1 = getQueryVariable("state");
+  if (!state1) {
+    window.location.replace(location.protocol + '//' + location.host + location.pathname +"?state=al");
+  }
   $('select option[value="' + state1 + '"]')
     .prop('selected', true);
+
   populateDropDown(state1);
   var sourceMembers = $("#committee-member-template")
     .html();
