@@ -5,6 +5,7 @@ var populateDropDown = function(state) {
     url: "http://openstates.org/api/v1/committees/",
     data: {
       state: state,
+      fields: 'members,committee,subcommittee,chamber',
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   })
@@ -13,18 +14,23 @@ var populateDropDown = function(state) {
       upperCommittees = _.where(committees, {
         chamber: "upper"
       });
+      console.log("committees",committees);
       lowerCommittees = _.where(committees, {
         chamber: "lower"
       });
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
       var sortedUpperOutput = "";
-      $.each(sortedUpperCommittees, function(key, val) {
-        sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
+      $.each(sortedUpperCommittees, function(key, cmte) {
+        if (cmte.members.length) {
+          sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + cmte.id + '">' + cmte.committee + '</a></li>';
+        }
       });
       var sortedLowerOutput = "";
-      $.each(sortedLowerCommittees, function(key, val) {
-        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
+      $.each(sortedLowerCommittees, function(key, cmte) {
+        if (cmte.members.length) {
+        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + cmte.id + '">' + cmte.committee + '</a></li>';
+        }
       });
       $('ul#tinyDropUpper')
         .prepend(sortedUpperOutput);
