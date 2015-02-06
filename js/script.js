@@ -35,6 +35,11 @@ var populateDropDown = function(state) {
         .prepend(sortedUpperOutput);
       $('ul#tinyDropLower')
         .prepend(sortedLowerOutput);
+
+      var committee1 = getQueryVariable("committee");
+      if (committee1) {
+        $('[data-cmte-id="'+committee1+'"]').click();
+      }
     })
 };
 // Get committee detail
@@ -136,7 +141,8 @@ $(document.body)
     var committee_id = $(this)
       .data("cmte-id");
     queryString.push('committee', committee_id);
-    console.log('data-committee', committee_id);
+
+    console.log('data-committee', committee_id, 'queryString', queryString);
     $(this)
       .parent()
       .parent()
@@ -235,8 +241,12 @@ $("select")
     var selectedState = $(this)
       .val();
     queryString.push('state', selectedState);
-    window.location.reload();
+
+//    window.location.reload();
+    window.location.replace(location.protocol + '//' + location.host + location.pathname +"?state="+selectedState);
+
     //  populateDropDown(state);
+
   });
 $("img")
   .error(function() {
@@ -270,10 +280,7 @@ function init() {
     .html();
   app.memberDetail = Handlebars.compile(sourceMemberDetail);
 
-  var committee1 = getQueryVariable("committee");
-  if (committee1) {
-    $('[data-cmte-id="'+committee1+'"]').click();
-  }
+
 }
 String.prototype.capitalize = function() {
   return this.replace(/(^|\s)[a-z]/g, function(m) {
