@@ -71,7 +71,7 @@ var addLegislators = function(committee) {
         url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/",
         data: {
           active: true,
-          fields: 'party,leg_id,active,district,party,email,full_name,role,email,photo_url,offices',
+          fields: 'party,leg_id,active,district,party,email,full_name,role,email,photo_url,offices,votesmart_id',
           apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
         }
       })
