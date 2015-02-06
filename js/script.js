@@ -14,7 +14,6 @@ var populateDropDown = function(state) {
       upperCommittees = _.where(committees, {
         chamber: "upper"
       });
-      console.log("committees",committees);
       lowerCommittees = _.where(committees, {
         chamber: "lower"
       });
@@ -48,12 +47,12 @@ var getCommitteeDetail = function(committee_id) {
     }
   })
     .done(function(committee, textStatus, jqXHR) {
-      var counter = 0;
-      leg_id_array = _.pluck(committee.members, 'leg_id');
-      console.log("memberIDs", leg_id_array);
+//      var counter = 0;
+//      leg_id_array = _.pluck(committee.members, 'leg_id');
+//      console.log("memberIDs", leg_id_array);
       if (committee.members.length > 0) {
-        console.log(committee);
-        addLegislators(committee)
+        console.log("getCommitteeDetail",committee);
+        addLegislators(committee);
       } else {
         $(".panel")
           .html("<div id='no-reported'>This committee <br/>(" + committee.committee + ")<br/>has no reported members.</div>");
@@ -72,6 +71,7 @@ var addLegislators = function(committee) {
         url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/",
         data: {
           active: true,
+          fields: 'party,leg_id,active,district,party,email,full_name,role,email,photo_url,offices',
           apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
         }
       })
