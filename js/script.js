@@ -5,6 +5,7 @@ var populateDropDown = function(state) {
     url: "http://openstates.org/api/v1/committees/",
     data: {
       state: state,
+      fields: 'members,committee,subcommittee,chamber',
       apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
     }
   })
@@ -19,12 +20,16 @@ var populateDropDown = function(state) {
       sortedUpperCommittees = _.sortBy(upperCommittees, 'committee');
       sortedLowerCommittees = _.sortBy(lowerCommittees, 'committee');
       var sortedUpperOutput = "";
-      $.each(sortedUpperCommittees, function(key, val) {
-        sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
+      $.each(sortedUpperCommittees, function(key, cmte) {
+        if (cmte.members.length) {
+          sortedUpperOutput += '<li><a href="#"  data-cmte-id="' + cmte.id + '">' + cmte.committee + '</a></li>';
+        }
       });
       var sortedLowerOutput = "";
-      $.each(sortedLowerCommittees, function(key, val) {
-        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + val.id + '">' + val.committee + '</a></li>';
+      $.each(sortedLowerCommittees, function(key, cmte) {
+        if (cmte.members.length) {
+        sortedLowerOutput += '<li><a href="#"  data-cmte-id="' + cmte.id + '">' + cmte.committee + '</a></li>';
+        }
       });
       $('ul#tinyDropUpper')
         .prepend(sortedUpperOutput);
@@ -42,12 +47,12 @@ var getCommitteeDetail = function(committee_id) {
     }
   })
     .done(function(committee, textStatus, jqXHR) {
-      var counter = 0;
-      leg_id_array = _.pluck(committee.members, 'leg_id');
-      console.log("memberIDs", leg_id_array);
+//      var counter = 0;
+//      leg_id_array = _.pluck(committee.members, 'leg_id');
+//      console.log("memberIDs", leg_id_array);
       if (committee.members.length > 0) {
-        console.log(committee);
-        addLegislators(committee)
+        console.log("getCommitteeDetail",committee);
+        addLegislators(committee);
       } else {
         $(".panel")
           .html("<div id='no-reported'>This committee <br/>(" + committee.committee + ")<br/>has no reported members.</div>");
@@ -66,6 +71,7 @@ var addLegislators = function(committee) {
         url: "http://openstates.org/api/v1/legislators/" + member.leg_id + "/",
         data: {
           active: true,
+          fields: 'party,leg_id,active,district,party,email,full_name,role,email,photo_url,offices',
           apikey: "9e3e71730ae34e1ebbf4dd0e1c346c07"
         }
       })
@@ -250,8 +256,12 @@ var app = {};
 
 function init() {
   var state1 = getQueryVariable("state");
+  if (!state1) {
+    window.location.replace(location.protocol + '//' + location.host + location.pathname +"?state=al");
+  }
   $('select option[value="' + state1 + '"]')
     .prop('selected', true);
+
   populateDropDown(state1);
   var sourceMembers = $("#committee-member-template")
     .html();
