@@ -3,7 +3,7 @@
 - DONE. Custom Domain: LegislativeCommittees.org
 - GitHub calendar-like resource for showing last updates
 - Social media
-- Google Analytics
+- DONE. Google Analytics
 - Handle subcommittees
 - About page: Map showing status of each state
 - implement site tour tool such as JoyRide
