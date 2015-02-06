@@ -13,9 +13,9 @@
 - DONE. Why does null email print a blank line? check Handlebars registerHelper for possible issue
 - DONE. state selector (dropdown and/or map)
 - DONE. clear member detail upon selecting a new committee
-- ...enable permalinks
+- DONE. enable permalinks
 - only display active members
-- Determine why Maryland party is empty. UPDATE: per Sunlight Foundation, Maryland updates likely in February
+- DONE. Determine why Maryland party is empty. UPDATE: per Sunlight Foundation, Maryland updates likely in February
 - sort members for memberList, so that chairs are at the top.
 - Modify SC "Vice-chair" to be "Vice-Chair"
 - DONE. use url parameter to determine state
