@@ -1,3 +1,6 @@
+- Enable menu for narrow window
+- Remove Drop-down if the chamber has not committees
+- Add joint committees
 - remove 'member' from empty members
 - Refactor for mobile
 - DONE. Custom Domain: LegislativeCommittees.org
