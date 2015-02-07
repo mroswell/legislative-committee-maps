@@ -30,7 +30,7 @@ select {
 }
 
 .row {max-width:78em;}
-#map { height: 575px; }
+/*#map { height: 575px; }*/
 .f-dropdown {
     max-width: 452px;
     z-index:1200;
