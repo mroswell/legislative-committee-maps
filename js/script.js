@@ -61,6 +61,7 @@ var getCommitteeDetail = function(id) {
 
 // append legislator detail to committee
 var addLegislators = function(committee) {
+  //render all at once, not as it goes
   committee.members.forEach(function(member, i) {
     if (member.leg_id) {
       openstates.getMember(member.leg_id).done(function(memberDetail) {
