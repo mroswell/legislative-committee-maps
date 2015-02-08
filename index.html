@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <title>Legislative Committee Maps</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -91,14 +92,33 @@
 <div class="row">
   <div class="large-11 columns">
     <span class="rwd-line">
-    <a href="#" style="margin-right:10px;margin-left:12px;" class="button committeeButton" data-dropdown="tinyDropLower"
-       data-options="is_hover:true">House Committees &raquo;</a>
-    <ul id="tinyDropLower" class="f-dropdown" data-dropdown-content style="position: absolute; top: 230px; left:
-    -99999px;">
+    <a 
+      href="#"
+      style="margin-right:10px;margin-left:12px;"
+      class="button committeeButton"
+      data-dropdown="tinyDropLower"
+      data-options="is_hover:true"
+    >House Committees &raquo;</a>
+    <!-- TODO: move these into classes, not style -->
+    <ul 
+      id="tinyDropLower" 
+      class="f-dropdown" 
+      data-dropdown-content 
+      style="position: absolute; top: 230px; left: -99999px;">
     </ul>
-    <a href="#" class="button committeeButton" data-dropdown="tinyDropUpper" data-options="is_hover:true">Senate
-    Committees &raquo;</a>
-    <ul id="tinyDropUpper" class="f-dropdown" data-dropdown-content style="position: absolute; top: 230px; left: -99999px; max-width:470px; ">
+    
+    <a 
+      href="#" 
+      class="button committeeButton" 
+      data-dropdown="tinyDropUpper" 
+      data-options="is_hover:true"
+    >Senate Committees &raquo;</a>
+    
+    <ul 
+      id="tinyDropUpper" 
+      class="f-dropdown" 
+      data-dropdown-content 
+      style="position: absolute; top: 230px; left: -99999px; max-width:470px;">
     </ul>
 
     </span>
@@ -148,63 +168,76 @@
 <div id="update1-left" class="small-6 columns"><pre></pre></div>
 <div id="update2-right" class="small-6 columns"><pre></pre></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/vendor/modernizr.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/foundation.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/foundation/foundation.dropdown.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+  <script id="committee-list-template" type="text/x-handlebars-template">
+{{#each committees}}
+<li><a href="#"  data-cmte-id="{{id}}">{{committee}}</a></li>
+{{/each}}
+  </script>
+
   <script id="committee-member-template" type="text/x-handlebars-template">
     <div class="entry">
       <a href="{{cmte.url}}" target="_blank"><h6>{{ cmte.committee}} <i class="fa fa-link"></i></h6></a>
       <ul>
         {{#each cmte.members}}
         <li><a href="javascript:void(0);" data-member-id="{{leg_id}}">
-          {{detail.full_name}}{{#if detail.party}} ({{detail.party}}{{/if}}{{#if detail.district}}&ndash;{{detail.district}}){{/if}}{{#if role}},
-          {{role}}{{/if}}</a></li>
+          {{detail.full_name}}
+          {{#if detail.party}} ({{detail.party}}{{/if}}
+          {{#if detail.district}}&ndash;{{detail.district}}){{/if}}
+          {{#if role}}, {{role}}{{/if}}
+        </a></li>
         {{/each}}
       </ul>
     </div>
   </script>
+  
   <script id="committee-member-detail-template" type="text/x-handlebars-template">
+  <!-- not sure this needs an each -->
     {{#each members}}
     <div class="entry entry-member-detail">
-      <p style="margin-bottom:0;">
-        {{#if detail.photo_url}}<img onerror='this.style.display = "none"' src="{{detail.photo_url}}" alt=""/>{{/if}}
-        <strong>{{detail.full_name}}{{#if detail.party}} ({{detail.party}}){{/if}}{{#if role}},
-          {{role}}{{/if}}</strong>
+      <p>
+        {{#if detail.photo_url}}
+        <img onerror='this.style.display = "none"' src="{{detail.photo_url}}" alt=""/>
+        {{/if}}
+        
+        <strong>
+          {{detail.full_name}}
+          {{#if detail.party}} ({{detail.party}}){{/if}}
+          {{#if role}}, {{role}}{{/if}}
+        </strong>
+        
         {{#if detail.votesmart_id}}<br />
-        <a target="_blank" href="http://votesmart.org/candidate/evaluations/{{detail.votesmart_id}}
-">Scorecards</a> &bull;
-        <a target="_blank" href="http://votesmart.org/candidate/campaign-finance/{{detail.votesmart_id}}/">Donors</a>
-        &bull;
-        <a target="_blank" href="http://votesmart.org/candidate/key-votes/{{detail.votesmart_id}}/"> Votes</a>
-      {{/if}}
+          <a target="_blank" href="http://votesmart.org/candidate/evaluations/{{detail.votesmart_id}}">Scorecards</a> &bull;
+          <a target="_blank" href="http://votesmart.org/candidate/campaign-finance/{{detail.votesmart_id}}/">Donors</a> &bull;
+          <a target="_blank" href="http://votesmart.org/candidate/key-votes/{{detail.votesmart_id}}/"> Votes</a>
+        {{/if}}
+        
         {{#if detail.district}}<br />District {{detail.district}}{{/if}}
+        
         {{# each detail.offices}}
           {{#if name}}<br /><strong>{{name}}</strong>{{/if}}
           {{#if address}}<br />{{breaklines address}}{{/if}}
           {{#if phone}}<br />{{phone}}{{/if}}
         {{/each}}
-        {{#if detail.email}}<br /><a href="mailto:{{detail.email}}">{{detail.email}}</a>{{/if}}
+        
+        {{#if detail.email}}
+        <br /><a href="mailto:{{detail.email}}">{{detail.email}}</a>
+        {{/if}}
       </p>
 
     </div>
     {{/each}}
   </script>
-<script src="js/script.js"></script>
-<script>
-//  var mapp = $.ajax("maps/maryland-legislative-districts-single.geojson");
-//var mapp = $.getJSON("maps/maryland-legislative-districts-single.geojson").done(function(stateLegMap) {
-//  console.log(stateLegMap.features[0].properties.name); //here's your response
-//});
-</script>
-<script>
-  $(document).foundation();
-  // state = getQueryVariable("state");
-//  populateDropDown(state);
-</script>
+  
+  <script src="bundle.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/foundation.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/foundation/foundation.dropdown.min.js"></script>
+  
+  <script>
+    $(document).foundation();
+  </script>
+
+  
 </body>
 </html>
