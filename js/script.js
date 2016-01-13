@@ -10,7 +10,15 @@ var populateDropDown = function(state) {
     }
   })
     .done(function(committeeList) {
+      console.log(state);
       committees = _.reject(committeeList, 'subcommittee');
+      if (state == 'md') {
+        var md_counties = ["Allegany", "Anne Arundel", "Baltimore City", "Baltimore County", "Calvert", "Caroline", "Carroll", "Cecil", "Charles", "Dorchester", "Frederick", "Garrett", "Harford", "Howard", "Kent", "Montgomery", "Prince George's", "Queen Anne's", "St. Mary's", "Somerset", "Talbot", "Washington", "Wicomico", "Worcester", "Eastern Shore", "Southern Maryland", "Western Maryland"];
+        committees = _.reject(committees, function (committee) {
+          return md_counties.indexOf(committee.committee) >= 0 ||
+            committee.committee.slice(0,4) === "No. ";
+        });
+      }
       upperCommittees = _.where(committees, {
         chamber: "upper"
       });
