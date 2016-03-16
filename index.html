@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
   <script id="committee-member-template" type="text/x-handlebars-template">
     <div class="entry">
-      <!--a href="{{cmte.url}}" target="_blank"><h6>{{ cmte.committee}} <i class="fa fa-link"></i></h6></a-->
+      <h6>{{cmte.committee}}</h6>
       <ul>
         {{#each cmte.members}}
         <li><a href="javascript:void(0);" data-member-id="{{leg_id}}">
